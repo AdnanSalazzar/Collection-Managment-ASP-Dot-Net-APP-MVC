@@ -1,0 +1,91 @@
+﻿@model CollectionManagement.Models.Domain.Collection
+
+@{
+    ViewData["Title"] = $"{Model.Name} - Items";
+}
+
+<h2>@Model.Name - Items</h2>
+<p>@Model.Description</p>
+
+<div class="row">
+    @foreach (var item in Model.Items)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.Tags</p>
+
+                    <div>
+                        <button class="btn btn-primary like-button" data-item-id="@item.ItemId">
+                            Like (@item.Likes.Count)
+                        </button>
+                    </div>
+
+                    <form id="commentForm-@item.ItemId" data-item-id="@item.ItemId" method="post">
+                        <textarea name="content" class="form-control" placeholder="Add a comment..."></textarea>
+                        <button type="submit" class="btn btn-outline-secondary mt-2">Comment</button>
+                    </form>
+
+                    <div id="commentsContainer-@item.ItemId">
+                        <!-- Comments will be loaded here -->
+                        @Html.Partial("_CommentsPartial", item.Comments)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle comment submission via AJAX
+            $("form[id^='commentForm-']").submit(function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var itemId = form.data("item-id");
+                var content = form.find("textarea[name='content']").val();
+
+                $.ajax({
+                    url: '@Url.Action("Comment", "ValidUserCollections")',
+                    type: 'POST',
+                    data: {
+                        itemId: itemId,
+                        content: content
+                    },
+                    success: function () {
+                        // Reload comments
+                        loadComments(itemId);
+                        form.find("textarea[name='content']").val(''); // Clear the textarea
+                    }
+                });
+            });
+        });
+
+        function loadComments(itemId) {
+            $.ajax({
+                url: '@Url.Action("GetComments", "ValidUserCollections")',
+                type: 'GET',
+                data: { itemId: itemId },
+                success: function (data) {
+                    $("#commentsContainer-" + itemId).html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('.like-button').click(function () {
+                var button = $(this);
+                var itemId = button.data('item-id');
+
+                $.post('@Url.Action("ToggleLike", "ValidUserCollections")', { itemId: itemId }, function (data) {
+                    button.text('Like (' + data.likeCount + ')');
+                });
+            });
+        });
+    </script>
+}

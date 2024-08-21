@@ -1,0 +1,34 @@
+﻿@model CollectionManagement.Models.Domain.Collection
+
+@{
+    ViewData["Title"] = $"{Model.Name} - Items";
+}
+
+<h2>@Model.Name - Items</h2>
+<p>@Model.Description</p>
+
+<div class="row">
+    @foreach (var item in Model.Items)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.Tags</p>
+
+                    <div>
+                        <p class="btn btn-secondary like-button" data-item-id="@item.ItemId">
+                            Like (@item.Likes.Count)
+                        </p>
+                    </div>
+
+                    <div id="commentsContainer-@item.ItemId">
+                        <!-- Comments will be loaded here -->
+                        @Html.Partial("_CommentsPartial", item.Comments)
+                    </div>
+                    <!-- Add more details about the item here -->
+                </div>
+            </div>
+        </div>
+    }
+</div>

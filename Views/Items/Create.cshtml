@@ -1,0 +1,89 @@
+﻿@model CollectionManagement.Models.ViewModels.ItemCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Item";
+}
+
+<h2>Create Item</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tags" class="control-label"></label>
+        <input id="tagsInput" name="Tags" class="form-control" />
+        <span asp-validation-for="Tags" class="text-danger"></span>
+    </div>
+
+    @* Dynamically render custom fields *@
+    @foreach (var field in ViewBag.CustomFields)
+    {
+        <div class="form-group">
+            <label>@field.FieldName</label>
+
+            @if (field.FieldType == "Integer")
+            {
+                <input type="number" name="CustomFieldValues[@field.CustomFieldId]" class="form-control"  required/>
+            }
+            else if (field.FieldType == "String")
+            {
+                <input type="text" name="CustomFieldValues[@field.CustomFieldId]" class="form-control" required />
+            }
+            else if (field.FieldType == "MultilineText")
+            {
+                <textarea name="CustomFieldValues[@field.CustomFieldId]" class="form-control" required></textarea>
+            }
+            else if (field.FieldType == "Boolean")
+            {
+                <input type="checkbox" name="CustomFieldValues[@field.CustomFieldId]"  />
+            }
+            else if (field.FieldType == "Date")
+            {
+                <input type="date" name="CustomFieldValues[@field.CustomFieldId]" class="form-control" required />
+            }
+        </div>
+    }
+    <input type="hidden" asp-for="CollectionId" />
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+<script>
+    var input = document.querySelector('#tagsInput');
+    var tagify = new Tagify(input, {
+        whitelist: [], // This will be populated via an AJAX call
+        dropdown: {
+            maxItems: 20,           // maximum items to show in the dropdown
+            classname: "tags-look", // custom classname for this dropdown, so it could be targeted
+            enabled: 1,             // show suggestions on focus
+            closeOnSelect: false    // keep the dropdown open after selecting a suggestion
+        }
+    });
+
+    // Fetch the existing tags from the server for autocomplete
+    $.ajax({
+        url: '@Url.Action("GetTags", "Items")',
+        type: 'GET',
+        success: function (data) {
+            tagify.settings.whitelist.push(...data);
+        }
+    });
+
+    // Ensure the dropdown suggestions show up after typing each tag
+    tagify.on('input', function (e) {
+        tagify.dropdown.show(e.detail.value); // Show the dropdown suggestions based on current input
+    });
+
+    tagify.on('add', function (e) {
+        tagify.dropdown.show(''); // Reset and show dropdown suggestions after adding a tag
+    });
+</script>

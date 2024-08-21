@@ -1,0 +1,62 @@
+﻿@model CollectionManagement.Models.ItemEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Item";
+}
+
+<h2>Edit Item</h2>
+
+<form asp-action="Edit">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tags" class="control-label"></label>
+        <input asp-for="Tags" class="form-control" />
+        <span asp-validation-for="Tags" class="text-danger"></span>
+    </div>
+
+    @* Dynamically render custom fields *@
+    @foreach (var field in ViewBag.CustomFields )
+    {
+        <div class="form-group">
+            <label>@field.FieldName</label>
+
+            @if (field.FieldType == "Integer")
+            {
+                <input type="number" name="CustomFieldValues[@field.CustomFieldId]" class="form-control" value="@Model.CustomFieldValues[field.CustomFieldId]" />
+            }
+            else if (field.FieldType == "String")
+            {
+                <input type="text" name="CustomFieldValues[@field.CustomFieldId]" class="form-control" value="@Model.CustomFieldValues[field.CustomFieldId]" />
+            }
+            else if (field.FieldType == "MultilineText")
+            {
+                <textarea name="CustomFieldValues[@field.CustomFieldId]" class="form-control">@Model.CustomFieldValues[field.CustomFieldId]</textarea>
+            }
+            else if (field.FieldType == "Boolean")
+            {
+                <input type="checkbox" name="CustomFieldValues[@field.CustomFieldId]" class="form-check-input" @(Model.CustomFieldValues[field.CustomFieldId] == "true" ? "checked" : "") />
+            }
+            else if (field.FieldType == "Date")
+            {
+                <input type="date" name="CustomFieldValues[@field.CustomFieldId]" class="form-control" value="@Model.CustomFieldValues[field.CustomFieldId]" />
+            }
+        </div>
+    }
+
+    @* Hidden fields for IDs *@
+    <input type="hidden" asp-for="ItemId" />
+    <input type="hidden" asp-for="CollectionId" />
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

@@ -1,0 +1,74 @@
+﻿@model CollectionManagement.Models.CollectionCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Collection";
+}
+
+<h2>Create New Collection</h2>
+
+<h4>Collection</h4>
+<hr />
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Category" class="control-label"></label>
+        <input asp-for="Category" class="form-control" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImageUrl" class="control-label"></label>
+        <input type="file" asp-for="ImageUrl" class="form-control-file" id="imageUpload" style="display: none;" />
+        <div id="drop-area" class="border border-secondary" style="padding: 30px; text-align: center;">
+            <p>Drag & drop an image here or click to select</p>
+        </div>
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create Collection" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+<script>
+    const dropArea = document.getElementById('drop-area');
+    const imageUpload = document.getElementById('imageUpload');
+
+    dropArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropArea.classList.add('border-primary');
+    });
+
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.classList.remove('border-primary');
+    });
+
+    dropArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropArea.classList.remove('border-primary');
+        imageUpload.files = event.dataTransfer.files;
+    });
+
+    dropArea.addEventListener('click', () => {
+        imageUpload.click();
+    });
+
+    imageUpload.addEventListener('change', () => {
+        const fileName = imageUpload.files.length > 0 ? imageUpload.files[0].name : '';
+        dropArea.innerHTML = fileName ? `<p>File selected: ${fileName}</p>` : '<p>Drag & drop an image here or click to select</p>';
+    });
+</script>

@@ -1,0 +1,84 @@
+﻿@model CollectionManagement.Models.Domain.Collection
+
+@{
+    ViewData["Title"] = "Collection Details";
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    <h4>Collection</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            Category
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Category
+        </dd>
+        <dt class="col-sm-2">
+            Description
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Description
+        </dd>
+        <dt class="col-sm-2">
+            Image
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="~/@Model.ImageUrl" alt="Collection Image" style="max-width: 300px; height: auto;" />
+            }
+            else
+            {
+                <p>No image available</p>
+            }
+        </dd>
+    </dl>
+</div>
+
+<h3>Items in this Collection</h3>
+
+<p>
+    <a asp-action="Create" asp-controller="Items" asp-route-collectionId="@Model.CollectionId" class="btn btn-primary">Add New Item</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tags</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    @foreach (var tag in item.Tags)
+                    {
+                        <span class="badge bg-secondary">@tag.Tag.Name</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-controller="Items" asp-route-id="@item.ItemId" class="btn btn-info">View</a>
+                    @* <a asp-action="Edit" asp-controller="Items" asp-route-id="@item.ItemId" class="btn btn-warning">Edit</a> *@
+                    <a asp-action="Delete" asp-controller="Items" asp-route-id="@item.ItemId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</p>

@@ -1,0 +1,18 @@
+﻿@model CollectionManagement.Models.Domain.Collection
+
+@{
+    ViewData["Title"] = "Select Custom Field Type";
+}
+
+<h2>Select Custom Field Type</h2>
+
+<p>Select the type of custom field you want to add to your collection:</p>
+
+<div>
+    <a asp-action="CreateMultilineTextField" asp-route-collectionId="@ViewBag.CollectionId" class="btn btn-primary">Add Multiline Text Field</a>
+    <a asp-action="CreateStringField" asp-route-collectionId="@ViewBag.CollectionId" class="btn btn-primary">Add String Field</a>
+    <a asp-action="CreateMultilineTextField" asp-route-collectionId="@ViewBag.CollectionId" class="btn btn-primary">Add Multiline Text Field</a>
+    <a asp-action="CreateBooleanField" asp-route-collectionId="@ViewBag.CollectionId" class="btn btn-primary">Add Boolean Checkbox</a>
+    <a asp-action="CreateDateField" asp-route-collectionId="@ViewBag.CollectionId" class="btn btn-primary">Add Date Field</a>
+    <a asp-action="Index" class="btn btn-secondary">Finish</a>
+</div>

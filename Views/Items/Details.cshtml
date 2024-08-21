@@ -1,0 +1,67 @@
+﻿@model CollectionManagement.Models.Domain.Item
+
+@{
+    ViewData["Title"] = "Item Details";
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    <h4>Item</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            Tags
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Tags != null && Model.Tags.Any())
+            {
+                @foreach (var itemTag in Model.Tags)
+                {
+                    @itemTag.Tag.Name <br />
+                }
+            }
+            else
+            {
+                <span>No tags</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Created At
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CreatedAt.ToString("g")
+        </dd>
+        <dt class="col-sm-2">
+            Updated At
+        </dt>
+        <dd class="col-sm-10">
+            @Model.UpdatedAt.ToString("g")
+        </dd>
+        @* Display Custom Fields *@
+        @if (Model.CustomFieldValues != null && Model.CustomFieldValues.Any())
+        {
+            @foreach (var customFieldValue in Model.CustomFieldValues)
+            {
+                <dt class="col-sm-2">
+                    @customFieldValue.CustomField.FieldName
+                </dt>
+                <dd class="col-sm-10">
+                    @customFieldValue.FieldValue
+                </dd>
+            }
+        }
+    </dl>
+</div>
+
+<p>
+    @* <a asp-action="Edit" asp-route-id="@Model.ItemId" class="btn btn-warning">Edit</a> *@
+    <a asp-action="Delete" asp-route-id="@Model.ItemId" class="btn btn-danger">Delete</a>
+    <a asp-action="Details" asp-controller="Collections" asp-route-id="@Model.CollectionId" class="btn btn-secondary">Back to Collection</a>
+</p>

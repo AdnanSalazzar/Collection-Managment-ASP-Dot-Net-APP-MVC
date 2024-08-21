@@ -1,0 +1,49 @@
+﻿@model CollectionManagement.Models.ManageUserRolesViewModel
+@{
+    ViewData["Title"] = "ManageRoles";
+}
+
+<h2>Manage Roles for @Model.UserName</h2>
+
+<form asp-action="ManageRoles" method="post">
+    <input type="hidden" asp-for="UserId" />
+
+    <div class="form-check">
+        <input type="checkbox" asp-for="IsAdmin" class="form-check-input" />
+        <label class="form-check-label">Admin</label>
+    </div>
+
+    <div class="form-check">
+        <input type="checkbox" asp-for="IsUser" class="form-check-input" />
+        <label class="form-check-label">User</label>
+    </div>
+
+    <button type="submit" name="actionType" value="SaveRoles" class="btn btn-primary">Save Roles</button>
+</form>
+
+<hr />
+
+@if (Model.IsBlocked)
+{
+    <form asp-action="ManageRoles" method="post">
+        <input type="hidden" asp-for="UserId" />
+        <button type="submit" name="actionType" value="UnblockUser" class="btn btn-warning">Unblock User</button>
+    </form>
+}
+else
+{
+    <form asp-action="ManageRoles" method="post">
+        <input type="hidden" asp-for="UserId" />
+        <button type="submit" name="actionType" value="BlockUser" class="btn btn-danger">Block User</button>
+    </form>
+}
+
+<form asp-action="ManageRoles" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" name="actionType" value="DeleteUser" class="btn btn-danger">Delete User</button>
+</form>
+
+<form asp-action="ImpersonateUser" method="post">
+    <input type="hidden" name="userId" value="@Model.UserId" />
+    <button type="submit" class="btn btn-primary">Impersonate User</button>
+</form>

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<CollectionManagement.Models.AdminUserViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Admin Dashboard</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    @string.Join(", ", user.Roles)
+                </td>
+                <td>
+                    <a href="@Url.Action("ManageRoles", "Admin", new { userId = user.UserId })" class="btn btn-primary">Manage User</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

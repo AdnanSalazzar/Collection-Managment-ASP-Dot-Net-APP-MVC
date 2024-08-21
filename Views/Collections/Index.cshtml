@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CollectionManagement.Models.Domain.Collection>
+
+@{
+    ViewData["Title"] = "Your Collections";
+}
+
+<h2>Your Collections</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Collection</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var collection in Model)
+        {
+            <tr>
+                <td>@collection.Name</td>
+                <td>@collection.Category</td>
+                <td>@collection.Description</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(collection.ImageUrl))
+                    {
+                        <img src="~/@collection.ImageUrl" alt="Collection Image" style="max-width: 100px; height: auto;" />
+                    }
+                    else
+                    {
+                        <p>No image</p>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@collection.CollectionId" class="btn btn-info">View</a>
+                    <a asp-action="Edit" asp-route-id="@collection.CollectionId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@collection.CollectionId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

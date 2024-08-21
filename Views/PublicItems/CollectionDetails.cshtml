@@ -1,0 +1,38 @@
+﻿@model CollectionManagement.Models.Domain.Collection
+
+@{
+    ViewData["Title"] = "Collection Details";
+}
+
+<h2>@Model.Name</h2>
+<p>@Model.Description</p>
+
+<h3>Items in this Collection</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tags</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="PublicItems" asp-action="Details" asp-route-id="@item.ItemId">@item.Name</a>
+                </td>
+                <td>
+                    @foreach (var tag in item.Tags)
+                    {
+                        <span class="">@tag.Tag.Name</span>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="PublicItems" asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-primary">View Item</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<CollectionManagement.Models.Domain.Item>
+
+@{
+    ViewData["Title"] = "Public Items";
+    string searchTags = ViewData["searchTags"] as string;
+    string searchMode = ViewData["searchMode"] as string;
+    string sortOrder = ViewData["sortOrder"] as string;
+}
+
+<h2>Items</h2>
+<form method="get" asp-action="Index">
+    <div class="form-group">
+        <label for="searchTags">Search Tags (comma-separated):</label>
+        <input type="text" class="form-control" id="searchTags" name="searchTags" value="@searchTags" />
+    </div>
+    <div class="form-group">
+        
+        <div class="d-flex p-2">
+            <div class="">
+                <label>Search Mode:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="searchMode" id="searchModeAnd" value="AND"
+                    @(searchMode == "AND" ? "checked" : null)>
+                    <label class="form-check-label" for="searchModeAnd">
+                        AND
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="searchMode" id="searchModeOr" value="OR"
+                    @(searchMode == "OR" ? "checked" : null)>
+                    <label class="form-check-label" for="searchModeOr">
+                        OR
+                    </label>
+                </div>
+            </div>
+            <div class="ms-3">
+                <div class="form-group">
+                    <label>Sort Order:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sortOrder" id="sortOrderLatest" value="latest"
+                        @(sortOrder == "latest" ? "checked" : null)>
+                        <label class="form-check-label" for="sortOrderLatest">
+                            Latest
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sortOrder" id="sortOrderOldest" value="oldest"
+                        @(sortOrder == "oldest" ? "checked" : null)>
+                        <label class="form-check-label" for="sortOrderOldest">
+                            Oldest
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Collection</th>
+                <th>Tags</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><a asp-action="Details" asp-route-id="@item.ItemId">@item.Name</a></td>
+                    <td>@item.Collection.Name</td>
+                    <td>
+                        @foreach (var tag in item.Tags)
+                        {
+                            <span class="">@tag.Tag.Name</span>
+                        }
+                    </td>
+                    <td>@item.CreatedAt</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No items found matching your criteria.</p>
+}

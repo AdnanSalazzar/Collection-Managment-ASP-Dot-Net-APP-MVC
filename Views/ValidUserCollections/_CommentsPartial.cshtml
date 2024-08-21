@@ -1,0 +1,8 @@
+﻿@model IEnumerable<CollectionManagement.Models.Domain.Comment>
+
+<ul class="list-unstyled mt-3">
+    @foreach (var comment in Model)
+    {
+        <li>@comment.Content - <strong>@comment.User.UserName</strong> (@comment.CreatedAt)</li>
+    }
+</ul>

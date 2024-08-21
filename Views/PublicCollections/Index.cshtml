@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CollectionManagement.Models.Domain.Collection>
+
+@{
+    ViewData["Title"] = "Public Collections";
+}
+
+<h2>Public Collections</h2>
+
+<div class="row">
+    @foreach (var collection in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                @if (!string.IsNullOrEmpty(collection.ImageUrl))
+                {
+                    <img class="card-img-top" src="~/@collection.ImageUrl" alt="@collection.Name" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@collection.Name</h5>
+                    <p class="card-text">@collection.Description</p>
+                    <a href="@Url.Action("ViewItems", "PublicCollections", new { id = collection.CollectionId })" class="btn btn-primary">View Items</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
